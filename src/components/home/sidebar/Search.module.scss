@@ -1,0 +1,53 @@
+.search{
+    background-color:#161719;
+    padding: 15px 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    span{
+        color: white;
+    }
+    .searchForm{
+        display: flex;
+        padding: 10px;
+        gap: 20px;
+        background-color: #1F2022;
+        border-radius: 10px;
+        input{
+            width: 100%;
+            background-color: transparent;
+            border: none;
+            color: white;
+            outline: none;
+        }
+        &::placeholder{
+            color: grey;
+            font-family: poppins;
+        }
+        button{
+            background-color: transparent;
+            border: none;
+            color: grey;
+            outline: none;
+            cursor: pointer;
+        }
+    }
+    .userChats{
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: white;
+        cursor: pointer;
+        border-radius: 10px;
+        &:hover{
+            background-color: #252628;
+        }
+    }
+    img{
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+}

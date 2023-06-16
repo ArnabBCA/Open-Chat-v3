@@ -1,0 +1,48 @@
+.contactBackground{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .contactConatiner{
+        height: 80%;
+        width: 325px;
+        padding: 20px;
+        .contactBox{
+            background-color:#161719;
+            border-radius: 10px;
+            height: 100%;
+            width: 100%;
+            .navBar{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                height: 50px;
+                padding: 10px 25px;
+                border-bottom: 1px solid #252628;
+                span{
+                    color: white;
+                    font-size: 22px;
+                }
+                button{
+                    padding: 0px;
+                    border: none;
+                    background-color: transparent;
+                    font-size: 24px;
+                    color: white;
+                    cursor: pointer;
+                }
+            }
+            .contactList{
+                height: calc(100% - 91px);
+                padding: 10px;
+                overflow-y: scroll;
+            }
+            ::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
+}

@@ -1,0 +1,36 @@
+.navbar{
+    display: flex;
+    align-items: center;
+    background-color: #161719;
+    height: 50px;
+    justify-content: space-between;
+    color: white;
+    .user{
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        img{
+            border: 7px solid #282b2d;
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    }
+    .logout{
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        button{
+            color: white;
+            background-color: transparent;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+        }
+        i{
+            color: rgb(255, 217, 0);
+            font-size: 18px;
+        }
+    }
+}

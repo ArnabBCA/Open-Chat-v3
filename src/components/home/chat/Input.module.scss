@@ -1,0 +1,55 @@
+.inputForm{
+    padding-top: 15px;
+    height: 50px;
+    display: flex;
+    .input{
+        width: 100%;
+        padding: 0px 15px;
+        border-radius: 10px;
+        background-color: #1F2022;
+        gap: 15px;
+        display: flex;
+        align-items: center;
+        .profilePic{
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        input{
+            width: 100%;
+            border: none;
+            outline: none;
+            color: white;
+            background-color: transparent;
+            font-size: 18px;
+        }
+        ::placeholder{
+            color: grey;
+        }
+        label{
+            height: 25px;
+            width: 25px;    
+            cursor: pointer;       
+            img{
+                height: 25px;
+                width: 25px;
+                filter: invert(1);
+            }
+            .imgDisable{
+                opacity: 0.3;
+            }
+        }
+        button{
+            padding: 0;
+            font-size: 20px ;
+            border: none;
+            color: white;
+            background-color:transparent;
+            cursor: pointer;
+        }
+        .disable{
+            opacity: 0.3;
+        }
+    }
+}

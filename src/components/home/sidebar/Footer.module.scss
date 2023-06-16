@@ -1,0 +1,50 @@
+.footer{
+    display: flex;
+    align-items:end;
+    justify-content: space-between;
+    .logoContainer{
+        .logo{
+            display: flex;
+            gap: 5px;
+            .open{
+                color: #ffffff;
+                font-weight:600;
+                font-size: 28px;
+            }
+            .chat{
+                color: #ffffff;
+                font-weight:400;
+                font-size: 28px;
+            }
+        }
+        span{
+            color: white;
+            font-size: 14px;
+        }
+    }
+    img{
+        border: none;
+        cursor: pointer;
+        height: 50px;
+        width: 50px;
+    }
+    a{
+        text-decoration: none;
+    }
+    .githubLink{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        img{
+            border: none;
+            cursor: pointer;
+            height: 30px;
+            width: 30px;
+        }
+        span{
+            color: white;
+            font-size: 12px;
+        }
+    }
+}

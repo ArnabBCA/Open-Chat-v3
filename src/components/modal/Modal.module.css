@@ -1,0 +1,78 @@
+.modalBackground{
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.500);
+    backdrop-filter: blur(3px);
+    position: fixed;
+}
+.modalContainer
+{   
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    height: 200px;
+    width: 200px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+    animation-name: grow-box;
+    animation-duration: .5s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+@keyframes grow-box {
+    0%{
+        opacity: 0;
+        top: 0%;
+        left: 50%;
+        transform: translate(-50%, -0%);
+    }
+    100%{
+        opacity: 1;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+.modalContainer button{
+    right: 10px;
+    top: 10px;
+    position: absolute;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    background-color: transparent;
+}
+.close{
+    width: 40px;
+    height: 40px;
+}
+.messageBox{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+.icon{
+    max-height: 80px;
+    max-width: 80px;
+}
+.title{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+}
+.p1{
+    font-size: 14px;
+    font-weight: bold;
+    color: #5d5b8d;
+    margin: 0;
+}
+.p2{
+    font-size: 12px;
+    color: #5d5b8d;
+    margin: 0;
+}

@@ -1,7 +1,7 @@
 
 
 const RightContainer = () => {
-  return <div className="h-full flex-1 bg-white">RightContainer</div>;
+  return <div className="h-full flex-1 bg-right transition-colors duration-300">RightContainer</div>;
 }
 
 export default RightContainer

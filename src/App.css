@@ -2,8 +2,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 body {
   margin: 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
+}
+
+.dark {
+  --sidebar: 23, 23, 23;
+  --left: 30, 30, 30;
+  --right: 35, 35, 35;
+  --button: 38, 38, 38;
+}
+.light {
+  --sidebar: 229, 231, 235;
+  --left: 243, 244, 246;
+  --right: 255, 255, 255;
+  --button: 255, 255, 255;
 }

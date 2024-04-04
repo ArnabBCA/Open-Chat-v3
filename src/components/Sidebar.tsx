@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import SidebarButtons from './wrappers/SidebarButtons';
 import CheckOutsideClick from './utils/CheckOutSideClick';
 import {
@@ -16,15 +15,15 @@ import {
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setTheme } from '../state/index.ts';
+import { setTheme, toggleSidebar } from '../state/index.ts';
 
 const Sidebar = () => {
-  const [expanded, setExpanded] = useState(false);
-  const theme = useSelector((state) => state.theme);
   const dispatch = useDispatch();
+  const theme = useSelector((state) => state.theme);
+  const isSidebarOpen = useSelector((state) => state.isSidebarOpen);
 
   const handleExpandClick = () => {
-    setExpanded(!expanded);
+    dispatch(toggleSidebar());
   };
 
   const handleThemeToggle = () => {
@@ -33,36 +32,36 @@ const Sidebar = () => {
 
   return (
     <div className="t relative h-full min-w-16">
-      <CheckOutsideClick handleClose={handleExpandClick} isOpen={expanded}>
+      <CheckOutsideClick handleClose={handleExpandClick} isOpen={isSidebarOpen}>
         <div
-          className={`absolute flex h-full flex-col justify-between gap-2 bg-sidebar p-2 duration-300 ${expanded ? 'w-60' : 'w-16'}`}
+          className={`absolute flex h-full flex-col justify-between gap-2 bg-sidebar p-2 duration-300 ${isSidebarOpen ? 'w-60' : 'w-16'}`}
         >
           <div className="flex flex-col gap-2">
-            <SidebarButtons onClick={() => {}} lable='Home' expanded={expanded}>
+            <SidebarButtons onClick={() => {}} lable="Home">
               <IoHome />
             </SidebarButtons>
-            <SidebarButtons onClick={() => {}} lable='Chats' expanded={expanded}>
+            <SidebarButtons onClick={() => {}} lable="Chats">
               <IoChatbubbles />
             </SidebarButtons>
-            <SidebarButtons onClick={() => {}} lable='Video Call' expanded={expanded}>
+            <SidebarButtons onClick={() => {}} lable="Video Call">
               <IoVideocam />
             </SidebarButtons>
-            <SidebarButtons onClick={handleThemeToggle} lable='Toggle Theme' expanded={expanded}>
+            <SidebarButtons onClick={handleThemeToggle} lable="Toggle Theme">
               {theme === 'dark' ? <MdLightMode /> : <MdDarkMode />}
             </SidebarButtons>
           </div>
           <div className="flex flex-col gap-2">
-            <SidebarButtons onClick={() => {}} lable='Source Code' expanded={expanded}>
+            <SidebarButtons onClick={() => {}} lable="Source Code">
               <IoLogoGithub />
             </SidebarButtons>
-            <SidebarButtons onClick={() => {}} lable='Logout' expanded={expanded}>
+            <SidebarButtons onClick={() => {}} lable="Logout">
               <IoLogOut />
             </SidebarButtons>
-            <SidebarButtons onClick={() => {}} lable='Settings' expanded={expanded}>
+            <SidebarButtons onClick={() => {}} lable="Settings">
               <IoSettings />
             </SidebarButtons>
-            <SidebarButtons onClick={handleExpandClick} expanded={expanded} lable='Collaspe'>
-              {expanded ? (
+            <SidebarButtons onClick={handleExpandClick} lable="Collaspe">
+              {isSidebarOpen ? (
                 <TbLayoutSidebarRightExpandFilled />
               ) : (
                 <TbLayoutSidebarLeftExpandFilled />

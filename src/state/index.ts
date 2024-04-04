@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   theme: localStorage.getItem('theme') || 'dark',
+  isSidebarOpen: false,
 };
 
 const authSlice = createSlice({
@@ -13,11 +14,12 @@ const authSlice = createSlice({
       localStorage.setItem('theme', newTheme);
       state.theme = newTheme;
     },
+    toggleSidebar: (state) => {
+      state.isSidebarOpen = !state.isSidebarOpen;
+    },
   },
 });
 
-export const {
-  setTheme,
-} = authSlice.actions;
+export const { setTheme, toggleSidebar } = authSlice.actions;
 
 export default authSlice.reducer;

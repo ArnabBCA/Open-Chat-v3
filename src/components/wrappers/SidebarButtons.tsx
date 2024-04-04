@@ -12,7 +12,7 @@ const SidebarButtons: React.FC<SidebarButtonsProps> = (props) => {
   return (
     <div
       onClick={props.onClick}
-      className="group relative flex w-full cursor-pointer items-center rounded-3xl bg-button text-green-600 shadow-xl duration-300 hover:rounded-2xl hover:bg-green-600 hover:text-white"
+      className="hover:bg-sidebarButtonAccent text-sidebarButtonAccent group relative flex w-full cursor-pointer items-center rounded-3xl bg-button shadow-xl duration-300 hover:rounded-2xl hover:text-white"
     >
       <button className="z-10 flex h-12 w-12 items-center justify-center rounded-3xl text-2xl">
         {props.children}

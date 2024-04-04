@@ -9,6 +9,10 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
+:root {
+  --sidebarButtonAccent: 22, 163, 74;
+}
+
 .dark {
   --sidebar: 23, 23, 23;
   --left: 30, 30, 30;

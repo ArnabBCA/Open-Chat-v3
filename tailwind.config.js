@@ -12,6 +12,7 @@ export default {
         left: 'rgba(var(--left))',
         right: 'rgba(var(--right))',
         button: 'rgba(var(--button))',
+        sidebarButtonAccent: 'rgba(var(--sidebarButtonAccent))',
       },
     },
   },

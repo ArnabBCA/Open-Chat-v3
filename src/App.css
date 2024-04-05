@@ -8,7 +8,9 @@ body {
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
-
+::-webkit-scrollbar {
+  display: none;
+}
 :root {
   --sidebarButtonAccent: 22, 163, 74;
 }
@@ -18,10 +20,14 @@ body {
   --left: 30, 30, 30;
   --right: 35, 35, 35;
   --button: 38, 38, 38;
+  --input: 41, 41, 41;
+  --inputText: 255, 255, 255;
 }
 .light {
   --sidebar: 229, 231, 235;
   --left: 243, 244, 246;
   --right: 255, 255, 255;
   --button: 255, 255, 255;
+  --input: 240, 240, 240;
+  --inputText: 0, 0, 0;
 }

@@ -13,6 +13,8 @@ export default {
         right: 'rgba(var(--right))',
         button: 'rgba(var(--button))',
         sidebarButtonAccent: 'rgba(var(--sidebarButtonAccent))',
+        input: 'rgba(var(--input))',
+        inputText: 'rgba(var(--inputText))',
       },
     },
   },

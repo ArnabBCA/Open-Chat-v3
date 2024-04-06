@@ -4,7 +4,7 @@ import Sidebar from '../Sidebar';
 
 const Home = () => {
   return (
-    <div className="flex h-svh w-full bg-white">
+    <div className="relative flex h-svh w-full bg-white overflow-x-hidden">
       <Sidebar />
       <LeftConainer />
       <RightContainer />

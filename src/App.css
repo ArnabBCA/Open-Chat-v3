@@ -13,6 +13,7 @@ body {
 }
 :root {
   --sidebarButtonAccent: 22, 163, 74;
+  --accent: 88, 101, 242;
 }
 
 .dark {

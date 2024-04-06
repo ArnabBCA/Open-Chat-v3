@@ -15,6 +15,7 @@ export default {
         sidebarButtonAccent: 'rgba(var(--sidebarButtonAccent))',
         input: 'rgba(var(--input))',
         inputText: 'rgba(var(--inputText))',
+        accent: 'rgba(var(--accent))',
       },
     },
   },

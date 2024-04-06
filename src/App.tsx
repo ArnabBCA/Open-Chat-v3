@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import './App.css';
 import Home from './components/pages/Home';
 import { useEffect } from 'react';
+import Auth from './components/pages/Auth';
 
 function App() {
   const theme = useSelector((state) => state.theme);
@@ -17,7 +18,7 @@ function App() {
   }, [theme]);
   return (
     <div>
-      <Home />
+      <Auth/>
     </div>
   );
 }

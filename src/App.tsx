@@ -3,6 +3,7 @@ import './App.css';
 import Home from './components/pages/Home';
 import { useEffect } from 'react';
 import Auth from './components/pages/Auth';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 function App() {
   const theme = useSelector((state) => state.theme);
@@ -17,9 +18,15 @@ function App() {
     }
   }, [theme]);
   return (
-    <div>
-      <Auth/>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/">
+          <Route index element={<Home />} />
+          <Route path="login" element={<Auth />} />
+          <Route path="register" element={<Auth />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

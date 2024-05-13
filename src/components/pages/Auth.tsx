@@ -1,6 +1,6 @@
-import { FormikValues, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import { initialValues } from '../../schemas/schemas';
-import { registerSchema } from '../../schemas/schemas';
+import { registerSchema, loginSchema } from '../../schemas/schemas';
 
 import { auth, db } from '../../firebase';
 import { doc, setDoc } from 'firebase/firestore';
@@ -14,7 +14,7 @@ import {
   sendEmailVerification,
   signOut,
 } from 'firebase/auth';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 const Auth = () => {
@@ -23,8 +23,6 @@ const Auth = () => {
   const [isLoginPage, setIsLoginPage] = useState<boolean>(
     location.pathname === '/login' ? true : false
   );
-  const [isEmailAlreadyTaken, setIsEmailAlreadyTaken] =
-    useState<boolean>(false);
   const {
     values,
     errors,
@@ -36,10 +34,9 @@ const Auth = () => {
     resetForm,
   } = useFormik({
     initialValues: initialValues,
-    validationSchema: registerSchema,
-    onSubmit: (values: FormikValues) => {
-      handleEmailPasswordSignIn();
-      console.log(values);
+    validationSchema: isLoginPage ? loginSchema : registerSchema,
+    onSubmit: () => {
+      isLoginPage ? handleLogin() : handleEmailPasswordSignIn();
     },
   });
 
@@ -58,6 +55,26 @@ const Auth = () => {
       if (!auth.currentUser) return;
       await sendEmailVerification(auth.currentUser);
       await signOut(auth);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, values.email, values.password);
+      if(auth.currentUser?.emailVerified){
+        await setDoc(doc(db, 'users', auth.currentUser.uid), {
+          uid: auth.currentUser.uid,
+          displayName: auth.currentUser.displayName,
+          email: auth.currentUser.email,
+          photoURL: auth.currentUser.photoURL,
+        });
+        navigate('/')
+      }else{
+        console.log('Please verify your email')
+        console.log(auth.currentUser)
+      }
     } catch (error) {
       console.log(error);
     }
@@ -85,6 +102,7 @@ const Auth = () => {
 
   useEffect(() => {
     setIsLoginPage(location.pathname === '/login' ? true : false);
+    console.log(auth.currentUser);
   }, [location.pathname, isLoginPage]);
 
   return (

@@ -1,7 +1,6 @@
 import { useFormik } from 'formik';
 import { initialValues } from '../../schemas/schemas';
 import { registerSchema, loginSchema } from '../../schemas/schemas';
-
 import { auth, db } from '../../firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import {
@@ -53,8 +52,15 @@ const Auth = () => {
       }
       await createUserWithEmailAndPassword(auth, values.email, values.password);
       if (!auth.currentUser) return;
+      await setDoc(doc(db, 'users', auth.currentUser.uid), {
+        uid: auth.currentUser.uid,
+        displayName: values.displayName,
+        email: auth.currentUser.email,
+        photoURL: null,
+      });
       await sendEmailVerification(auth.currentUser);
       await signOut(auth);
+      navigate('/login');
     } catch (error) {
       console.log(error);
     }
@@ -63,17 +69,12 @@ const Auth = () => {
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, values.email, values.password);
-      if(auth.currentUser?.emailVerified){
-        await setDoc(doc(db, 'users', auth.currentUser.uid), {
-          uid: auth.currentUser.uid,
-          displayName: auth.currentUser.displayName,
-          email: auth.currentUser.email,
-          photoURL: auth.currentUser.photoURL,
-        });
-        navigate('/')
-      }else{
-        console.log('Please verify your email')
-        console.log(auth.currentUser)
+      if (auth.currentUser?.emailVerified) {
+        resetForm();
+        navigate('/');
+      } else {
+        await signOut(auth);
+        console.log('Please verify your email');
       }
     } catch (error) {
       console.log(error);
@@ -102,7 +103,6 @@ const Auth = () => {
 
   useEffect(() => {
     setIsLoginPage(location.pathname === '/login' ? true : false);
-    console.log(auth.currentUser);
   }, [location.pathname, isLoginPage]);
 
   return (

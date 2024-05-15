@@ -29,7 +29,6 @@ const Auth = () => {
     handleBlur,
     handleChange,
     handleSubmit,
-    setFieldValue,
     resetForm,
   } = useFormik({
     initialValues: initialValues,

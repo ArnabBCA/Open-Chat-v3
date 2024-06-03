@@ -95,6 +95,7 @@ const Auth = () => {
         email: auth.currentUser.email,
         photoURL: auth.currentUser.photoURL,
       });
+      navigate('/');
     } catch (error) {
       console.log(error);
     }
@@ -184,6 +185,7 @@ const Auth = () => {
             </button>
             <span className="p-1 text-center text-neutral-500">or</span>
             <button
+              type="button"
               onClick={googleAuth}
               className="rounded-md bg-white px-4 py-2 text-black outline-none"
             >

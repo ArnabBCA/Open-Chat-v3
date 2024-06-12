@@ -1,7 +1,4 @@
-import SidebarButtons from './wrappers/SidebarButtons';
-import CheckOutsideClick from './utils/CheckOutSideClick';
 import {
-  IoHome,
   IoSettings,
   IoChatbubbles,
   IoLogOut,
@@ -14,6 +11,9 @@ import {
 } from 'react-icons/tb';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 
+import SidebarButtons from './wrappers/SidebarButtons';
+import ProfilePic from './wrappers/ProfilePic.tsx';
+import CheckOutsideClick from './utils/CheckOutSideClick';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTheme, toggleSidebar } from '../state/index.ts';
 
@@ -22,7 +22,6 @@ const Sidebar = () => {
   const theme = useSelector((state) => state.theme);
   const isSidebarOpen = useSelector((state) => state.isSidebarOpen);
   const currentUser = useSelector((state) => state.currentUser);
-  console.log(currentUser);
 
   const handleExpandClick = () => {
     dispatch(toggleSidebar());
@@ -43,14 +42,11 @@ const Sidebar = () => {
               onClick={() => {}}
               className="group relative flex w-full cursor-pointer items-center gap-2"
             >
-              <button className="flex h-12 w-12 items-center justify-center rounded-3xl text-2xl">
-                <img
-                  className="rounded-3xl duration-300 hover:rounded-2xl"
-                  referrerPolicy="no-referrer"
-                  src={currentUser.photoURL}
-                  alt="Profile Pic"
-                />
-              </button>
+              <ProfilePic
+                photoURL={currentUser.photoURL}
+                size={12}
+                uid={currentUser.uid}
+              />
               <span
                 className={`absolute whitespace-nowrap text-base text-inputText ${isSidebarOpen ? 'translate-x-14' : 'hidden'}`}
               >

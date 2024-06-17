@@ -1,21 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { getDatabase, ref, onValue, get } from 'firebase/database';
+import { useEffect, useState } from 'react';
+import { getDatabase, ref, onValue } from 'firebase/database';
 
-const ProfilePic = (props: { photoURL: string; size: number; uid: string }) => {
+interface ProfilePicProps {
+  photoURL: string;
+  size?: string | number;
+  uid: string;
+}
+
+const ProfilePic = ({ photoURL, size = 'full', uid }: ProfilePicProps) => {
   const db = getDatabase();
-  const [status, setStatus] = useState('offline');
-  const statusRef = ref(db, `users/${props.uid}/status`);
-  
+  const [status, setStatus] = useState<string>('offline');
+  const statusRef = ref(db, `users/${uid}/status`);
+
   useEffect(() => {
-    const unsub = onValue(statusRef, (snap) => {
+    const unsubscribe = onValue(statusRef, (snap) => {
       setStatus(snap.val());
     });
     return () => {
-      unsub();
+      unsubscribe();
     };
   }, []);
 
-  const getStatusClass = () => {
+  const getStatusClass = (): string => {
     switch (status) {
       case 'online':
         return 'bg-green-500';
@@ -27,15 +33,15 @@ const ProfilePic = (props: { photoURL: string; size: number; uid: string }) => {
   };
 
   return (
-    <div className={`relative h-${props.size} w-${props.size}`}>
+    <div className={`relative h-${size}`}>
       <div
-        className={`absolute bottom-0.5 right-0.5 z-10 h-2.5 w-2.5 rounded-full ${getStatusClass()} ring-2 ring-left`}
+        className={`absolute bottom-0.5 right-0.5 h-2.5 w-2.5 rounded-full ${getStatusClass()} ring-2 ring-left`}
       ></div>
-      <button className="relative flex items-center justify-center overflow-hidden rounded-3xl duration-300 hover:rounded-2xl">
+      <button className="h-full flex items-center justify-center overflow-hidden rounded-[50%] duration-300 hover:rounded-2xl">
         <img
-          className="h-full w-full object-cover"
+          className="h-full object-cover"
           referrerPolicy="no-referrer"
-          src={props.photoURL}
+          src={photoURL}
           alt="Profile Pic"
         />
       </button>

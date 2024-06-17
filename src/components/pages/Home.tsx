@@ -29,6 +29,7 @@ const Home = () => {
         } else {
           update(userConnectionsRef, {
             status: 'online',
+            isTyping: false,
           });
         }
         onDisconnect(userConnectionsRef).update({

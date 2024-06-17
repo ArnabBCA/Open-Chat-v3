@@ -1,13 +1,32 @@
+import { getDatabase, ref, update } from 'firebase/database';
 import { IoIosSend, IoIosAddCircle } from 'react-icons/io';
+import { useSelector } from 'react-redux';
 
 const Input = () => {
+  const currentUser = useSelector((state) => state.currentUser);
+  const db = getDatabase();
+  const userConnectionsRef = ref(db, `users/${currentUser.uid}`);
+  
+  const handleTyping = () => {
+    update(userConnectionsRef, {
+      isTyping: true,
+    });
+  };
+  const handleNotTyping = () => {
+    update(userConnectionsRef, {
+      isTyping: false,
+    });
+  };
+
   return (
     <div className="flex h-full gap-1 rounded-lg bg-input p-2 shadow-xl duration-300">
       <button>
         <IoIosAddCircle className="text-3xl text-neutral-500" />
       </button>
       <input
-        className="h-full w-full bg-transparent outline-none text-inputText"
+        onFocus={handleTyping}
+        onBlur={handleNotTyping}
+        className="h-full w-full bg-transparent text-inputText outline-none"
         type="text"
         placeholder="Type message..."
       />

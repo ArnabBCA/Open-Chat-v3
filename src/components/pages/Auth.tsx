@@ -56,6 +56,7 @@ const Auth = () => {
         displayName: values.displayName,
         email: auth.currentUser.email,
         photoURL: null,
+        code: generateRandomCode(),
       });
       await sendEmailVerification(auth.currentUser);
       await signOut(auth);
@@ -94,11 +95,22 @@ const Auth = () => {
         displayName: auth.currentUser.displayName,
         email: auth.currentUser.email,
         photoURL: auth.currentUser.photoURL,
+        code: generateRandomCode(),
       });
       navigate('/');
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const generateRandomCode = () => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    const charactersLength = characters.length;
+    for (let i = 0; i < 4; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
   };
 
   useEffect(() => {

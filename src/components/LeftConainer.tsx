@@ -1,7 +1,9 @@
+import Contacts from './Contacts';
+
 const LeftConainer = () => {
   return (
-    <div className="sm:max-w-80 h-full w-full bg-left transition-colors duration-300">
-      LeftConainer
+    <div className="h-full w-full  bg-left transition-colors duration-300 sm:max-w-80">
+      <Contacts />
     </div>
   );
 };

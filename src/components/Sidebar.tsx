@@ -35,7 +35,7 @@ const Sidebar = () => {
     <div className="relative h-full min-w-16">
       <CheckOutsideClick handleClose={handleExpandClick} isOpen={isSidebarOpen}>
         <div
-          className={`absolute flex h-full flex-col justify-between gap-2 overflow-y-scroll bg-sidebar p-2 duration-300 ${isSidebarOpen ? 'w-60' : 'w-16'}`}
+          className={`absolute flex h-full flex-col justify-between gap-2 overflow-y-scroll bg-sidebar p-2 duration-300 z-10 ${isSidebarOpen ? 'w-60' : 'w-16'}`}
         >
           <div className="flex flex-col gap-2">
             <div

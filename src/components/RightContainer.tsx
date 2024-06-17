@@ -36,7 +36,7 @@ const RightContainer = () => {
   return (
     <div
       ref={containerRef}
-      className={`absolute h-full w-full flex-1 ${isMobile ? 'translate-x-[calc(-3rem+100%)]' : 'translate-x-0'} bg-right transition-colors duration-300 sm:relative sm:translate-x-0`}
+      className={`absolute z-10 h-full w-full flex-1 ${isMobile ? 'translate-x-[calc(-3rem+100%)]' : 'translate-x-0'} bg-right transition-colors duration-300 sm:relative sm:translate-x-0`}
     >
       {/*<div className={`${isMobile ? 'block' : 'hidden'} absolute h-full w-full bg-black opacity-50`}></div>*/}
       <div className="h-16">

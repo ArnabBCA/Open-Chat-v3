@@ -35,7 +35,7 @@ const Sidebar = () => {
     <div className="relative h-full min-w-16">
       <CheckOutsideClick handleClose={handleExpandClick} isOpen={isSidebarOpen}>
         <div
-          className={`absolute flex h-full flex-col justify-between gap-2 overflow-y-scroll bg-sidebar p-2 duration-300 z-10 ${isSidebarOpen ? 'w-60' : 'w-16'}`}
+          className={`absolute z-10 flex h-full flex-col justify-between gap-2 overflow-y-scroll bg-sidebar p-2 duration-300 ${isSidebarOpen ? 'w-60' : 'w-16'}`}
         >
           <div className="flex flex-col gap-2">
             <div
@@ -47,11 +47,14 @@ const Sidebar = () => {
                 size={12}
                 uid={currentUser.uid}
               />
-              <span
-                className={`absolute whitespace-nowrap text-base text-inputText ${isSidebarOpen ? 'translate-x-14' : 'hidden'}`}
+              <div
+                className={`absolute flex flex-col  ${isSidebarOpen ? 'translate-x-14' : 'hidden'}`}
               >
-                {currentUser.displayName}
-              </span>
+                <span className="w-40 overflow-hidden overflow-ellipsis whitespace-nowrap text-base text-inputText  duration-300">
+                  {currentUser.displayName}
+                </span>
+                <span className="text-neutral-500">#{currentUser.code}</span>
+              </div>
             </div>
             <SidebarButtons onClick={() => {}} lable="Chats">
               <IoChatbubbles />

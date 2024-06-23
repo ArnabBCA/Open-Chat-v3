@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './store';
 import { setCurrentUser } from '../../state';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../firebase';
+import { auth, db } from '../../firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useDispatch();
@@ -13,13 +14,26 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = React.useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      dispatch(setCurrentUser(user));
-      setIsLoading(false);
+    const unsubscribeFromAuth = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userDocRef = doc(db, 'users', user.uid);
+        const unsubscribeFromSnapshot = onSnapshot(
+          userDocRef,
+          (docSnapshot) => {
+            if (docSnapshot.exists()) {
+              dispatch(
+                setCurrentUser({ ...user, code: docSnapshot.data().code })
+              );
+              setIsLoading(false);
+            }
+          }
+        );
+        return () => unsubscribeFromSnapshot();
+      } else {
+        dispatch(setCurrentUser(null));
+      }
     });
-    return () => {
-      unsubscribe();
-    };
+    return () => unsubscribeFromAuth();
   }, []);
 
   if (isLoading) {

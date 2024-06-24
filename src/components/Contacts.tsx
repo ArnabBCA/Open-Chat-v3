@@ -49,7 +49,7 @@ const Contacts = () => {
   }, []);
 
   return (
-    <div className="flex h-full w-full flex-col overflow-x-scroll p-2">
+    <div className="flex h-full w-full flex-col overflow-x-scroll">
       {contacts.map((contact) => (
         <Contact key={contact.uid} contact={contact} />
       ))}

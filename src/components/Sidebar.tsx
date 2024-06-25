@@ -1,34 +1,25 @@
-import {
-  IoSettings,
-  IoChatbubbles,
-  IoLogOut,
-  IoVideocam,
-  IoLogoGithub,
-} from 'react-icons/io5';
+import { IoSettings, IoLogOut, IoLogoGithub } from 'react-icons/io5';
 import {
   TbLayoutSidebarLeftExpandFilled,
   TbLayoutSidebarRightExpandFilled,
 } from 'react-icons/tb';
-import { MdDarkMode, MdLightMode } from 'react-icons/md';
 
 import SidebarButtons from './wrappers/SidebarButtons';
 import ProfilePic from './wrappers/ProfilePic.tsx';
 import CheckOutsideClick from './utils/CheckOutSideClick';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTheme, toggleSidebar } from '../state/index.ts';
+import { toggleSidebar } from '../state/index.ts';
+import AddNewContact from './sidebar button actions/AddNewContact.tsx';
+import ToggleTheme from './sidebar button actions/ToggleTheme.tsx';
+import VideoCall from './sidebar button actions/VideoCall.tsx';
 
 const Sidebar = () => {
   const dispatch = useDispatch();
-  const theme = useSelector((state) => state.theme);
   const isSidebarOpen = useSelector((state) => state.isSidebarOpen);
   const currentUser = useSelector((state) => state.currentUser);
 
   const handleExpandClick = () => {
     dispatch(toggleSidebar());
-  };
-
-  const handleThemeToggle = () => {
-    dispatch(setTheme());
   };
 
   return (
@@ -56,15 +47,9 @@ const Sidebar = () => {
                 <span className="text-neutral-500">#{currentUser.code}</span>
               </div>
             </div>
-            <SidebarButtons onClick={() => {}} lable="Chats">
-              <IoChatbubbles />
-            </SidebarButtons>
-            <SidebarButtons onClick={() => {}} lable="Video Call">
-              <IoVideocam />
-            </SidebarButtons>
-            <SidebarButtons onClick={handleThemeToggle} lable="Toggle Theme">
-              {theme === 'dark' ? <MdLightMode /> : <MdDarkMode />}
-            </SidebarButtons>
+            <AddNewContact />
+            <VideoCall />
+            <ToggleTheme />
           </div>
           <div className="flex flex-col gap-2">
             <SidebarButtons onClick={() => {}} lable="Source Code">

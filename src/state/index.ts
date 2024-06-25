@@ -4,6 +4,7 @@ const initialState = {
   theme: localStorage.getItem('theme') || 'dark',
   isSidebarOpen: false,
   currentUser: null,
+  currentPage: 'home',
 };
 
 const authSlice = createSlice({
@@ -20,10 +21,14 @@ const authSlice = createSlice({
     },
     setCurrentUser: (state, action) => {
       state.currentUser = action.payload;
-    }
+    },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
   },
 });
 
-export const { setTheme, toggleSidebar,setCurrentUser } = authSlice.actions;
+export const { setTheme, toggleSidebar, setCurrentUser, setCurrentPage } =
+  authSlice.actions;
 
 export default authSlice.reducer;

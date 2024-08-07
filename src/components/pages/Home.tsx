@@ -10,10 +10,10 @@ import {
   update,
 } from 'firebase/database';
 import { useEffect } from 'react';
-import { useAppSelector } from '../../hooks/useSelector';
+import { useSelector } from '../../hooks/useSelector';
 
 const Home = () => {
-  const currentUser = useAppSelector((state) => state.currentUser);
+  const currentUser = useSelector((state) => state.currentUser);
   if (!currentUser) return;
   const db = getDatabase();
   const userConnectionsRef = ref(db, `users/${currentUser.uid}`);

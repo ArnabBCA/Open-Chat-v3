@@ -7,11 +7,11 @@ import { setCurrentUser } from '../../state';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from '../../firebase';
 import { doc, onSnapshot } from 'firebase/firestore';
-import { useAppSelector } from '../../hooks/useSelector';
+import { useSelector } from '../../hooks/useSelector';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useDispatch();
-  const currentUser = useAppSelector((state) => state.currentUser);
+  const currentUser = useSelector((state) => state.currentUser);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

@@ -1,17 +1,18 @@
 import { Navigate } from 'react-router-dom';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Loader from '../Loader';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from './store';
+import { useDispatch } from 'react-redux';
+import { RootState } from '../../main';
 import { setCurrentUser } from '../../state';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from '../../firebase';
 import { doc, onSnapshot } from 'firebase/firestore';
+import { useAppSelector } from '../../hooks/useSelector';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useDispatch();
-  const currentUser = useSelector((state: RootState) => state.currentUser);
-  const [isLoading, setIsLoading] = React.useState(true);
+  const currentUser = useAppSelector((state) => state.currentUser);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribeFromAuth = onAuthStateChanged(auth, (user) => {
@@ -22,7 +23,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
           (docSnapshot) => {
             if (docSnapshot.exists()) {
               dispatch(
-                setCurrentUser({ ...user, code: docSnapshot.data().code })
+                setCurrentUser(docSnapshot.data() as RootState['currentUser'])
               );
               setIsLoading(false);
             }

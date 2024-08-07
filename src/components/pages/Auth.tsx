@@ -57,6 +57,9 @@ const Auth = () => {
         email: auth.currentUser.email,
         photoURL: null,
         code: generateRandomCode(),
+        contacts: [],
+        friendReqReceived: [],
+        friendReqSend: [],
       });
       await sendEmailVerification(auth.currentUser);
       await signOut(auth);
@@ -96,6 +99,9 @@ const Auth = () => {
         email: auth.currentUser.email,
         photoURL: auth.currentUser.photoURL,
         code: generateRandomCode(),
+        contacts: [],
+        friendReqReceived: [],
+        friendReqSend: [],
       });
       navigate('/');
     } catch (error) {

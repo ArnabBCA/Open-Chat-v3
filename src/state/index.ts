@@ -1,7 +1,25 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const initialState = {
-  theme: localStorage.getItem('theme') || 'dark',
+interface User {
+  code: string;
+  contacts: string[];
+  displayName: string;
+  email: string;
+  friendReqReceived: string[];
+  friendReqSend: string[];
+  photoURL: string;
+  uid: string;
+}
+
+interface AuthState {
+  theme: 'light' | 'dark';
+  isSidebarOpen: boolean;
+  currentUser: User | null;
+  currentPage: string;
+}
+
+const initialState: AuthState = {
+  theme: (localStorage.getItem('theme') as 'light' | 'dark') || 'dark',
   isSidebarOpen: false,
   currentUser: null,
   currentPage: 'home',
@@ -19,10 +37,10 @@ const authSlice = createSlice({
     toggleSidebar: (state) => {
       state.isSidebarOpen = !state.isSidebarOpen;
     },
-    setCurrentUser: (state, action) => {
+    setCurrentUser: (state, action: PayloadAction<User | null>) => {
       state.currentUser = action.payload;
     },
-    setCurrentPage: (state, action) => {
+    setCurrentPage: (state, action: PayloadAction<string>) => {
       state.currentPage = action.payload;
     },
   },
@@ -30,5 +48,4 @@ const authSlice = createSlice({
 
 export const { setTheme, toggleSidebar, setCurrentUser, setCurrentPage } =
   authSlice.actions;
-
 export default authSlice.reducer;

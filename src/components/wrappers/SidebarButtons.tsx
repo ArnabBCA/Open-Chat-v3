@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import { useSelector } from 'react-redux';
+import { RootState } from '../../main';
 
 interface SidebarButtonsProps {
   children?: ReactNode;
@@ -8,11 +9,11 @@ interface SidebarButtonsProps {
 }
 
 const SidebarButtons: React.FC<SidebarButtonsProps> = (props) => {
-  const isSidebarOpen = useSelector((state) => state.isSidebarOpen);
+  const isSidebarOpen = useSelector((state: RootState) => state.isSidebarOpen);
   return (
     <div
       onClick={props.onClick}
-      className="hover:bg-sidebarButtonAccent text-sidebarButtonAccent group relative flex w-full cursor-pointer items-center rounded-3xl bg-button shadow-xl duration-300 hover:rounded-2xl hover:text-white"
+      className="group relative flex w-full cursor-pointer items-center rounded-3xl bg-button text-sidebarButtonAccent shadow-xl duration-300 hover:rounded-2xl hover:bg-sidebarButtonAccent hover:text-white"
     >
       <button className=" flex h-12 w-12 items-center justify-center rounded-3xl text-2xl">
         {props.children}

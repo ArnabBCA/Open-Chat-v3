@@ -1,11 +1,12 @@
 import SidebarButtons from '../wrappers/SidebarButtons';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setTheme } from '../../state';
+import { useAppSelector } from '../../hooks/useSelector';
 
 const ToggleTheme = () => {
   const dispatch = useDispatch();
-  const theme = useSelector((state) => state.theme);
+  const theme = useAppSelector((state) => state.theme);
   const handleThemeToggle = () => {
     dispatch(setTheme());
   };

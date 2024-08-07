@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux';
 import LeftConainer from '../LeftConainer';
 import RightContainer from '../RightContainer';
 import Sidebar from '../Sidebar';
@@ -11,9 +10,11 @@ import {
   update,
 } from 'firebase/database';
 import { useEffect } from 'react';
+import { useAppSelector } from '../../hooks/useSelector';
 
 const Home = () => {
-  const currentUser = useSelector((state: RootState) => state.currentUser);
+  const currentUser = useAppSelector((state) => state.currentUser);
+  if (!currentUser) return;
   const db = getDatabase();
   const userConnectionsRef = ref(db, `users/${currentUser.uid}`);
   const connectedRef = ref(db, '.info/connected');

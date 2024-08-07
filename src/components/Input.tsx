@@ -1,12 +1,13 @@
 import { getDatabase, ref, update } from 'firebase/database';
 import { IoIosSend, IoIosAddCircle } from 'react-icons/io';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../hooks/useSelector';
 
 const Input = () => {
   const currentUser = useSelector((state) => state.currentUser);
+  if (!currentUser) return;
   const db = getDatabase();
   const userConnectionsRef = ref(db, `users/${currentUser.uid}`);
-  
+
   const handleTyping = () => {
     update(userConnectionsRef, {
       isTyping: true,

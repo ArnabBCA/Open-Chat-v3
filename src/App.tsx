@@ -1,14 +1,13 @@
-import { useSelector } from 'react-redux';
 import './App.css';
 import Home from './components/pages/Home';
 import { useEffect } from 'react';
 import Auth from './components/pages/Auth';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { RootState } from './store';
 import ProtectedRoute from './components/routes/ProtectedRoute';
+import { useSelector } from './hooks/useSelector';
 
 const App = () => {
-  const theme = useSelector((state: RootState) => state.theme);
+  const theme = useSelector((state) => state.theme);
 
   const toggleTheme = () => {
     if (theme === 'dark') {

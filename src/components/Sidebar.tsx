@@ -7,16 +7,20 @@ import {
 import SidebarButtons from './wrappers/SidebarButtons';
 import ProfilePic from './wrappers/ProfilePic.tsx';
 import CheckOutsideClick from './utils/CheckOutSideClick';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { toggleSidebar } from '../state/index.ts';
 import AddNewContact from './sidebar button actions/AddNewContact.tsx';
 import ToggleTheme from './sidebar button actions/ToggleTheme.tsx';
 import VideoCall from './sidebar button actions/VideoCall.tsx';
+import Notification from './sidebar button actions/Notification.tsx';
+import { useSelector } from '../hooks/useSelector.tsx';
 
 const Sidebar = () => {
   const dispatch = useDispatch();
   const isSidebarOpen = useSelector((state) => state.isSidebarOpen);
   const currentUser = useSelector((state) => state.currentUser);
+
+  if (!currentUser) return;
 
   const handleExpandClick = () => {
     dispatch(toggleSidebar());
@@ -48,6 +52,7 @@ const Sidebar = () => {
               </div>
             </div>
             <AddNewContact />
+            <Notification />
             <VideoCall />
             <ToggleTheme />
           </div>

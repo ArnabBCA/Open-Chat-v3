@@ -1,25 +1,25 @@
-import { IoIosNotifications } from 'react-icons/io';
-import SidebarButtons from '../wrappers/SidebarButtons';
 import { useDispatch } from 'react-redux';
 import { setCurrentPage } from '../../state';
+import SidebarButtons from '../wrappers/SidebarButtons';
+import { IoChatbubbles } from 'react-icons/io5';
 import { useSelector } from '../../hooks/useSelector';
 
-const Notification = () => {
+const Chats = () => {
   const dispatch = useDispatch();
   const currentPage = useSelector((state) => state.currentPage);
 
   const handleCurrentPage = () => {
-    dispatch(setCurrentPage('notification'));
+    dispatch(setCurrentPage('chats'));
   };
   return (
     <SidebarButtons
       onClick={handleCurrentPage}
-      lable="Notifications"
-      isHoverActive={currentPage === 'notification' && true}
+      lable="Chats"
+      isHoverActive={currentPage === 'chats' && true}
     >
-      <IoIosNotifications />
+      <IoChatbubbles />
     </SidebarButtons>
   );
 };
 
-export default Notification;
+export default Chats;

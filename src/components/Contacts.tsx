@@ -53,7 +53,7 @@ const Contacts = () => {
 
   const handleContacts = () => {
     if (!currentUser) return;
-    if (currentPage === 'home') {
+    if (currentPage === 'chats') {
       const currentUserDocRef = doc(db, 'users', currentUser.uid);
 
       const unsubscribeContacts = onSnapshot(

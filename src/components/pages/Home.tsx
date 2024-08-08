@@ -11,9 +11,13 @@ import {
 } from 'firebase/database';
 import { useEffect } from 'react';
 import { useSelector } from '../../hooks/useSelector';
+import { useSearchParams } from 'react-router-dom';
 
 const Home = () => {
   const currentUser = useSelector((state) => state.currentUser);
+  const currentPage = useSelector((state) => state.currentPage);
+  const [_, setSearchParams] = useSearchParams();
+
   if (!currentUser) return;
   const db = getDatabase();
   const userConnectionsRef = ref(db, `users/${currentUser.uid}`);
@@ -47,6 +51,10 @@ const Home = () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
+
+  useEffect(() => {
+    setSearchParams({ page: currentPage });
+  }, [currentPage]);
 
   return (
     <div className="relative flex h-svh w-full overflow-x-hidden">

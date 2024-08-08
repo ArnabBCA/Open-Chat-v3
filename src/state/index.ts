@@ -18,11 +18,24 @@ interface AuthState {
   currentPage: string;
 }
 
+const handleCurrentPage = () => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const page = searchParams.get('page') || 'chats';
+  if (
+    page !== 'chats' &&
+    page !== 'addNewContact' &&
+    page !== 'notification'
+  ) {
+    return 'chats';
+  }
+  return page;
+};
+
 const initialState: AuthState = {
   theme: (localStorage.getItem('theme') as 'light' | 'dark') || 'dark',
   isSidebarOpen: false,
   currentUser: null,
-  currentPage: 'home',
+  currentPage: handleCurrentPage(),
 };
 
 const authSlice = createSlice({

@@ -11,9 +11,9 @@ import { useDispatch } from 'react-redux';
 import { toggleSidebar } from '../state/index.ts';
 import AddNewContact from './sidebar button actions/AddNewContact.tsx';
 import ToggleTheme from './sidebar button actions/ToggleTheme.tsx';
-import VideoCall from './sidebar button actions/VideoCall.tsx';
 import Notification from './sidebar button actions/Notification.tsx';
 import { useSelector } from '../hooks/useSelector.tsx';
+import Chats from './sidebar button actions/Chats.tsx';
 
 const Sidebar = () => {
   const dispatch = useDispatch();
@@ -51,9 +51,9 @@ const Sidebar = () => {
                 <span className="text-neutral-500">#{currentUser.code}</span>
               </div>
             </div>
+            <Chats />
             <AddNewContact />
             <Notification />
-            <VideoCall />
             <ToggleTheme />
           </div>
           <div className="flex flex-col gap-2">

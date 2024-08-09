@@ -25,6 +25,7 @@ const Contacts = () => {
   const currentUser = useSelector((state) => state.currentUser);
   const currentPage = useSelector((state) => state.currentPage);
   const [contacts, setContacts] = useState<ContactProps[]>([]);
+  if (!currentUser) return;
 
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value.trim();
@@ -51,44 +52,47 @@ const Contacts = () => {
     }
   };
 
-  const handleContacts = () => {
-    if (!currentUser) return;
-    if (currentPage === 'chats') {
-      const currentUserDocRef = doc(db, 'users', currentUser.uid);
+  const getUserDetails = async (contactUids: Array<string>) => {
+    const contactPromises = contactUids.map((uid: string) =>
+      getDoc(doc(db, 'users', uid))
+    );
+    try {
+      const contactDocs = await Promise.all(contactPromises);
+      const contactDetails = contactDocs.map((contactDoc) => ({
+        ...contactDoc.data(),
+      })) as ContactProps[];
+      setContacts(contactDetails);
+    } catch (error) {
+      console.error('Error fetching contact users details:', error);
+      setContacts([]);
+    }
+  };
 
+  const handleContacts = () => {
+    const currentUserDocRef = doc(db, 'users', currentUser.uid);
+
+    if (currentPage === 'chats') {
       const unsubscribeContacts = onSnapshot(
         currentUserDocRef,
         async (docSnapshot) => {
           const data = docSnapshot.data();
-          if (data?.contacts) {
-            const contactUids = data.contacts;
-
-            const contactPromises = contactUids.map((uid: string) =>
-              getDoc(doc(db, 'users', uid))
-            );
-
-            try {
-              const contactDocs = await Promise.all(contactPromises);
-              const contactDetails = contactDocs.map((contactDoc) => ({
-                uid: contactDoc.id,
-                ...contactDoc.data(),
-              })) as ContactProps[];
-              setContacts(contactDetails);
-            } catch (error) {
-              console.error('Error fetching contact details:', error);
-              setContacts([]);
-            }
-          } else {
-            setContacts([]);
-          }
+          const contactUids = data?.contacts;
+          getUserDetails(contactUids);
         }
       );
-
       return () => unsubscribeContacts();
     }
 
-    if (currentPage === 'addNewContact') {
-      setContacts([]);
+    if (currentPage === 'notification') {
+      const unsubscribeContacts = onSnapshot(
+        currentUserDocRef,
+        async (docSnapshot) => {
+          const data = docSnapshot.data();
+          const contactUids = data?.friendReqReceived;
+          getUserDetails(contactUids);
+        }
+      );
+      return () => unsubscribeContacts();
     }
   };
 

@@ -59,7 +59,7 @@ const Contact = ({ contact }: { contact: ContactProps }) => {
 
   useEffect(() => {
     return getFriendRequestStatus();
-  }, [contact.uid, currentUser.uid]);
+  }, [contact.uid]);
 
   const rdb = getDatabase();
   const isTypingRef = ref(rdb, `users/${contact.uid}/isTyping`);

@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { getPageSearchParam } from '../components/utils/getPageSeachParam';
 
 interface User {
   code: string;
@@ -18,24 +19,11 @@ interface AuthState {
   currentPage: string;
 }
 
-const handleCurrentPage = () => {
-  const searchParams = new URLSearchParams(window.location.search);
-  const page = searchParams.get('page') || 'chats';
-  if (
-    page !== 'chats' &&
-    page !== 'addNewContact' &&
-    page !== 'notification'
-  ) {
-    return 'chats';
-  }
-  return page;
-};
-
 const initialState: AuthState = {
   theme: (localStorage.getItem('theme') as 'light' | 'dark') || 'dark',
   isSidebarOpen: false,
   currentUser: null,
-  currentPage: handleCurrentPage(),
+  currentPage: getPageSearchParam(),
 };
 
 const authSlice = createSlice({

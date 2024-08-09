@@ -12,8 +12,12 @@ import {
 import { useEffect } from 'react';
 import { useSelector } from '../../hooks/useSelector';
 import { useSearchParams } from 'react-router-dom';
+import { setCurrentPage } from '../../state';
+import { useDispatch } from 'react-redux';
+import { getPageSearchParam } from '../utils/getPageSeachParam';
 
 const Home = () => {
+  const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.currentUser);
   const currentPage = useSelector((state) => state.currentPage);
   const [_, setSearchParams] = useSearchParams();
@@ -55,6 +59,11 @@ const Home = () => {
   useEffect(() => {
     setSearchParams({ page: currentPage });
   }, [currentPage]);
+
+  const page = getPageSearchParam();
+  useEffect(() => {
+    dispatch(setCurrentPage(page));
+  }, [page]);
 
   return (
     <div className="relative flex h-svh w-full overflow-x-hidden">

@@ -11,6 +11,8 @@ import { getDatabase, onValue, ref } from 'firebase/database';
 import ProfilePic from './wrappers/ProfilePic';
 import { db } from '../firebase';
 import { useSelector } from '../hooks/useSelector';
+import { MdDone } from 'react-icons/md';
+import { RxCross2 } from 'react-icons/rx';
 
 const Contact = ({ contact }: { contact: ContactProps }) => {
   const currentUser = useSelector((state) => state.currentUser);
@@ -42,24 +44,45 @@ const Contact = ({ contact }: { contact: ContactProps }) => {
     }
   };
 
+  const handleAddFriendRequest = () => {
+    updateDoc(currentUserDocRef, {
+      contacts: arrayUnion(contact.uid),
+      friendReqReceived: arrayRemove(contact.uid),
+      friendReqSend: arrayRemove(contact.uid),
+    });
+    updateDoc(contactUserDocRef, {
+      contacts: arrayUnion(currentUser.uid),
+      friendReqSend: arrayRemove(currentUser.uid),
+      friendReqReceived: arrayRemove(currentUser.uid),
+    });
+  };
+
+  const handleRemoveFriendRequest = () => {
+    updateDoc(currentUserDocRef, {
+      friendReqReceived: arrayRemove(contact.uid),
+    });
+    updateDoc(contactUserDocRef, {
+      friendReqSend: arrayRemove(currentUser.uid),
+    });
+  };
+
   const getFriendRequestStatus = () => {
     const unsubscribe = onSnapshot(contactUserDocRef, (docSnapshot) => {
       const data = docSnapshot.data();
-      if (
-        data?.friendReqReceived &&
-        data.friendReqReceived.includes(currentUser.uid)
-      ) {
+      if (data?.friendReqReceived?.includes(currentUser.uid)) {
         setIsRequested(true);
       } else {
         setIsRequested(false);
       }
     });
-    return () => unsubscribe();
+    return unsubscribe;
   };
 
   useEffect(() => {
-    return getFriendRequestStatus();
-  }, [contact.uid]);
+    if (currentPage !== 'addNewContact') return;
+    const unsubscribe = getFriendRequestStatus();
+    return () => unsubscribe();
+  }, []);
 
   const rdb = getDatabase();
   const isTypingRef = ref(rdb, `users/${contact.uid}/isTyping`);
@@ -74,22 +97,41 @@ const Contact = ({ contact }: { contact: ContactProps }) => {
   }, [contact.uid]);
 
   return (
-    <div className="flex max-h-16 w-full items-center gap-2 rounded-xl p-2 duration-300 hover:bg-button hover:shadow-xl">
-      <ProfilePic photoURL={contact.photoURL} uid={contact.uid} />
-      <div>
-        <p className="text-inputText">{contact.displayName}</p>
-        {currentPage === 'addNewContact' ? (
-          <button
-            type="button"
-            className="rounded-lg bg-accent px-2 text-sm text-white"
-            onClick={handleSendOrRevoke}
-          >
-            {isRequested ? 'Revoke' : 'Request'}
-          </button>
-        ) : (
-          <span className="text-green-500">{isTyping ? 'typing...' : ''}</span>
-        )}
+    <div className="flex max-h-16 w-full items-center justify-between gap-2 rounded-lg p-2 duration-300 hover:bg-button hover:shadow-xl">
+      <div className="flex h-full items-center gap-2">
+        <ProfilePic photoURL={contact.photoURL} uid={contact.uid} />
+        <div>
+          <p className="text-inputText">{contact.displayName}</p>
+          {currentPage === 'addNewContact' ? (
+            <button
+              className="rounded-lg bg-accent px-2 text-sm text-white"
+              onClick={handleSendOrRevoke}
+            >
+              {isRequested ? 'Revoke' : 'Request'}
+            </button>
+          ) : (
+            <span className="text-green-500">
+              {isTyping ? 'typing...' : ''}
+            </span>
+          )}
+        </div>
       </div>
+      {currentPage === 'notification' && (
+        <div className="flex gap-2">
+          <button
+            className="flex items-center justify-center rounded-lg bg-green-500 p-2 text-white"
+            onClick={handleAddFriendRequest}
+          >
+            <MdDone size={18} />
+          </button>
+          <button
+            className="flex items-center justify-center rounded-lg bg-red-500 p-2 text-white"
+            onClick={handleRemoveFriendRequest}
+          >
+            <RxCross2 size={18} />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

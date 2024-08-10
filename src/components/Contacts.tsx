@@ -25,7 +25,8 @@ const Contacts = () => {
   const currentUser = useSelector((state) => state.currentUser);
   const currentPage = useSelector((state) => state.currentPage);
   const [contacts, setContacts] = useState<ContactProps[]>([]);
-  if (!currentUser) return;
+  if (!currentUser) return null;
+  const currentUserDocRef = doc(db, 'users', currentUser.uid);
 
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value.trim();
@@ -46,13 +47,14 @@ const Contacts = () => {
         return;
       }
       const searchUsers = querySnapshot.docs.map(
-        (doc) => ({ uid: doc.id, ...doc.data() }) as ContactProps
+        (doc) => ({ ...doc.data() }) as ContactProps
       );
       setContacts(searchUsers);
     }
   };
 
   const getUserDetails = async (contactUids: Array<string>) => {
+    if (!contactUids) return null;
     const contactPromises = contactUids.map((uid: string) =>
       getDoc(doc(db, 'users', uid))
     );
@@ -69,35 +71,22 @@ const Contacts = () => {
   };
 
   const handleContacts = () => {
-    const currentUserDocRef = doc(db, 'users', currentUser.uid);
-
-    if (currentPage === 'chats') {
-      const unsubscribeContacts = onSnapshot(
-        currentUserDocRef,
-        async (docSnapshot) => {
-          const data = docSnapshot.data();
-          const contactUids = data?.contacts;
-          getUserDetails(contactUids);
-        }
-      );
-      return () => unsubscribeContacts();
-    }
-
-    if (currentPage === 'notification') {
-      const unsubscribeContacts = onSnapshot(
-        currentUserDocRef,
-        async (docSnapshot) => {
-          const data = docSnapshot.data();
-          const contactUids = data?.friendReqReceived;
-          getUserDetails(contactUids);
-        }
-      );
-      return () => unsubscribeContacts();
-    }
+    const unsubscribe = onSnapshot(currentUserDocRef, async (docSnapshot) => {
+      const data = docSnapshot.data();
+      if (currentPage === 'chats') {
+        getUserDetails(data?.contacts);
+      }
+      if (currentPage === 'notification') {
+        getUserDetails(data?.friendReqReceived);
+      }
+    });
+    return unsubscribe;
   };
 
   useEffect(() => {
-    handleContacts();
+    setContacts([]);
+    const unsubscribe = handleContacts();
+    return () => unsubscribe();
   }, [currentPage]);
 
   return (
@@ -117,7 +106,13 @@ const Contacts = () => {
         ))}
         {contacts.length === 0 && (
           <div className="flex h-full w-full items-center justify-center">
-            <span className="text-neutral-500">Not found</span>
+            <span className="text-neutral-500">
+              {currentPage === 'chats'
+                ? 'No Contacts'
+                : currentPage === 'addNewContact'
+                  ? 'User not found'
+                  : 'No new notification'}
+            </span>
           </div>
         )}
       </div>

@@ -12,14 +12,16 @@ import {
 import { useEffect } from 'react';
 import { useSelector } from '../../hooks/useSelector';
 import { useSearchParams } from 'react-router-dom';
-import { setCurrentPage } from '../../state';
+import { setCurrentChatId, setCurrentPage } from '../../state';
 import { useDispatch } from 'react-redux';
 import { getPageSearchParam } from '../utils/getPageSeachParam';
+import { getChatIdSearchParam } from '../utils/getChatIdSearchParam';
 
 const Home = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.currentUser);
   const currentPage = useSelector((state) => state.currentPage);
+  const currentChatId = useSelector((state) => state.currentChatId);
   const [_, setSearchParams] = useSearchParams();
 
   if (!currentUser) return;
@@ -57,13 +59,27 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    setSearchParams({ page: currentPage });
-  }, [currentPage]);
+    const params = new URLSearchParams();
+    params.set('page', currentPage);
+    if (currentPage === 'chats' && currentChatId) {
+      params.set('chatId', currentChatId);
+    } else {
+      params.delete('chatId');
+    }
+    setSearchParams(params);
+  }, [currentPage, currentChatId]);
 
   const page = getPageSearchParam();
   useEffect(() => {
     dispatch(setCurrentPage(page));
   }, [page]);
+
+  const chatId = getChatIdSearchParam();
+  useEffect(() => {
+    if (chatId) {
+      dispatch(setCurrentChatId(chatId));
+    }
+  }, [chatId]);
 
   return (
     <div className="relative flex h-svh w-full overflow-x-hidden">

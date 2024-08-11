@@ -1,13 +1,18 @@
 import { useState, useRef, useEffect } from 'react';
 import Input from './Input';
 import CheckOutsideClick from './utils/CheckOutSideClick';
+import Chats from './Chats';
+import { useDispatch } from 'react-redux';
+import { useSelector } from '../hooks/useSelector';
+import { toggleIsMobile } from '../state';
 
 const RightContainer = () => {
-  const [isMobile, setIsMobile] = useState(true);
+  const dispatch = useDispatch();
+  const isMobile = useSelector((state) => state.isMobile);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const slideBack = () => {
-    setIsMobile((prev) => !prev);
+    dispatch(toggleIsMobile());
   };
 
   const addProperty = () => {
@@ -44,7 +49,7 @@ const RightContainer = () => {
           <button onClick={slideBack}>Back</button>
         </CheckOutsideClick>
       </div>
-      <div className="h-[calc(100%_-_8rem)] ">Center</div>
+      <Chats />
       <div className="h-16 p-2">
         <Input />
       </div>

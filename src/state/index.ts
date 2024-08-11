@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getPageSearchParam } from '../components/utils/getPageSeachParam';
+import { getChatIdSearchParam } from '../components/utils/getChatIdSearchParam';
 
 interface User {
   code: string;
@@ -15,16 +16,20 @@ interface User {
 interface AuthState {
   theme: 'light' | 'dark';
   isSidebarOpen: boolean;
+  isMobile: boolean;
   currentUser: User | null;
   currentPage: string;
+  currentChatId: string | null;
   messages: [];
 }
 
 const initialState: AuthState = {
   theme: (localStorage.getItem('theme') as 'light' | 'dark') || 'dark',
   isSidebarOpen: false,
+  isMobile: false,
   currentUser: null,
   currentPage: getPageSearchParam(),
+  currentChatId: getChatIdSearchParam(),
   messages: [],
 };
 
@@ -40,11 +45,17 @@ const authSlice = createSlice({
     toggleSidebar: (state) => {
       state.isSidebarOpen = !state.isSidebarOpen;
     },
+    toggleIsMobile: (state) => {
+      state.isMobile = !state.isMobile;
+    },
     setCurrentUser: (state, action: PayloadAction<User | null>) => {
       state.currentUser = action.payload;
     },
     setCurrentPage: (state, action: PayloadAction<string>) => {
       state.currentPage = action.payload;
+    },
+    setCurrentChatId: (state, action: PayloadAction<string | null>) => {
+      state.currentChatId = action.payload;
     },
     setMessages: (state, action: PayloadAction<[]>) => {
       state.messages = action.payload;
@@ -55,8 +66,10 @@ const authSlice = createSlice({
 export const {
   setTheme,
   toggleSidebar,
+  toggleIsMobile,
   setCurrentUser,
   setCurrentPage,
   setMessages,
+  setCurrentChatId,
 } = authSlice.actions;
 export default authSlice.reducer;

@@ -14,8 +14,11 @@ import { db } from '../firebase';
 import { useSelector } from '../hooks/useSelector';
 import { MdDone } from 'react-icons/md';
 import { RxCross2 } from 'react-icons/rx';
+import { useDispatch } from 'react-redux';
+import { setCurrentChatId, toggleIsMobile } from '../state';
 
 const Contact = ({ contact }: { contact: ContactProps }) => {
+  const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.currentUser);
   const currentPage = useSelector((state) => state.currentPage);
   if (!currentUser) return;
@@ -90,6 +93,11 @@ const Contact = ({ contact }: { contact: ContactProps }) => {
     return unsubscribe;
   };
 
+  const handleChatClick = () => {
+    dispatch(setCurrentChatId(generateChatId(currentUser.uid, contact.uid)));
+    dispatch(toggleIsMobile());
+  };
+
   useEffect(() => {
     if (currentPage !== 'addNewContact') return;
     const unsubscribe = getFriendRequestStatus();
@@ -109,7 +117,10 @@ const Contact = ({ contact }: { contact: ContactProps }) => {
   }, [contact.uid]);
 
   return (
-    <div className="flex max-h-16 w-full items-center justify-between gap-2 rounded-lg p-2 duration-300 hover:bg-button hover:shadow-xl">
+    <div
+      className="flex max-h-16 w-full cursor-pointer items-center justify-between gap-2 rounded-lg p-2 duration-300 hover:bg-button hover:shadow-xl"
+      onClick={handleChatClick}
+    >
       <div className="flex h-full items-center gap-2">
         <ProfilePic photoURL={contact.photoURL} uid={contact.uid} />
         <div>

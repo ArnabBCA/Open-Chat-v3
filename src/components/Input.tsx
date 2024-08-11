@@ -5,8 +5,8 @@ import { useSelector } from '../hooks/useSelector';
 const Input = () => {
   const currentUser = useSelector((state) => state.currentUser);
   if (!currentUser) return;
-  const db = getDatabase();
-  const userConnectionsRef = ref(db, `users/${currentUser.uid}`);
+  const rdb = getDatabase();
+  const userConnectionsRef = ref(rdb, `users/${currentUser.uid}`);
 
   const handleTyping = () => {
     update(userConnectionsRef, {

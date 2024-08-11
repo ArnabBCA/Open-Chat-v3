@@ -17,6 +17,7 @@ interface AuthState {
   isSidebarOpen: boolean;
   currentUser: User | null;
   currentPage: string;
+  messages: [];
 }
 
 const initialState: AuthState = {
@@ -24,6 +25,7 @@ const initialState: AuthState = {
   isSidebarOpen: false,
   currentUser: null,
   currentPage: getPageSearchParam(),
+  messages: [],
 };
 
 const authSlice = createSlice({
@@ -44,9 +46,17 @@ const authSlice = createSlice({
     setCurrentPage: (state, action: PayloadAction<string>) => {
       state.currentPage = action.payload;
     },
+    setMessages: (state, action: PayloadAction<[]>) => {
+      state.messages = action.payload;
+    },
   },
 });
 
-export const { setTheme, toggleSidebar, setCurrentUser, setCurrentPage } =
-  authSlice.actions;
+export const {
+  setTheme,
+  toggleSidebar,
+  setCurrentUser,
+  setCurrentPage,
+  setMessages,
+} = authSlice.actions;
 export default authSlice.reducer;

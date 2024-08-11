@@ -4,6 +4,7 @@ import {
   arrayUnion,
   doc,
   onSnapshot,
+  setDoc,
   updateDoc,
 } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
@@ -44,7 +45,12 @@ const Contact = ({ contact }: { contact: ContactProps }) => {
     }
   };
 
-  const handleAddFriendRequest = () => {
+  const generateChatId = (uid1: string, uid2: string) => {
+    const sortedUids = [uid1, uid2].sort();
+    return `${sortedUids[0]}_${sortedUids[1]}`;
+  };
+
+  const handleAddFriendRequest = async () => {
     updateDoc(currentUserDocRef, {
       contacts: arrayUnion(contact.uid),
       friendReqReceived: arrayRemove(contact.uid),
@@ -55,6 +61,12 @@ const Contact = ({ contact }: { contact: ContactProps }) => {
       friendReqSend: arrayRemove(currentUser.uid),
       friendReqReceived: arrayRemove(currentUser.uid),
     });
+    await setDoc(
+      doc(db, 'chats', generateChatId(currentUser.uid, contact.uid)),
+      {
+        messages: [],
+      }
+    );
   };
 
   const handleRemoveFriendRequest = () => {

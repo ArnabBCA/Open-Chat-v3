@@ -26,7 +26,7 @@ interface AuthState {
 const initialState: AuthState = {
   theme: (localStorage.getItem('theme') as 'light' | 'dark') || 'dark',
   isSidebarOpen: false,
-  isMobile: false,
+  isMobile: true,
   currentUser: null,
   currentPage: getPageSearchParam(),
   currentChatId: getChatIdSearchParam(),

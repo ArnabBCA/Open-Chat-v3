@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import Input from './Input';
 import CheckOutsideClick from './utils/CheckOutSideClick';
 import Chats from './Chats';

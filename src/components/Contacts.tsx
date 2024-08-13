@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   collection,
   doc,
@@ -14,17 +14,14 @@ import { db } from '../firebase';
 import { IoIosSearch } from 'react-icons/io';
 import Contact from './Contact';
 import { useSelector } from '../hooks/useSelector';
-
-export interface ContactProps {
-  uid: string;
-  displayName: string;
-  photoURL: string;
-}
+import { useDispatch } from 'react-redux';
+import { setContacts } from '../state';
 
 const Contacts = () => {
+  const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.currentUser);
   const currentPage = useSelector((state) => state.currentPage);
-  const [contacts, setContacts] = useState<ContactProps[]>([]);
+  const contacts = useSelector((state) => state.contacts);
   if (!currentUser) return null;
   const currentUserDocRef = doc(db, 'users', currentUser.uid);
 
@@ -32,7 +29,7 @@ const Contacts = () => {
     const searchValue = e.target.value.trim();
     if (currentPage === 'addNewContact') {
       if (searchValue === '') {
-        setContacts([]);
+        dispatch(setContacts([]));
         return;
       }
       const q = query(
@@ -43,13 +40,13 @@ const Contacts = () => {
       );
       const querySnapshot = await getDocs(q);
       if (querySnapshot.empty) {
-        setContacts([]);
+        dispatch(setContacts([]));
         return;
       }
-      const searchUsers = querySnapshot.docs.map(
-        (doc) => ({ ...doc.data() }) as ContactProps
-      );
-      setContacts(searchUsers);
+      const searchUsers = querySnapshot.docs.map((doc: any) => ({
+        ...doc.data(),
+      }));
+      dispatch(setContacts(searchUsers));
     }
   };
 
@@ -60,13 +57,13 @@ const Contacts = () => {
     );
     try {
       const contactDocs = await Promise.all(contactPromises);
-      const contactDetails = contactDocs.map((contactDoc) => ({
+      const contactDetails = contactDocs.map((contactDoc: any) => ({
         ...contactDoc.data(),
-      })) as ContactProps[];
-      setContacts(contactDetails);
+      }));
+      dispatch(setContacts(contactDetails));
     } catch (error) {
       console.error('Error fetching contact users details:', error);
-      setContacts([]);
+      dispatch(setContacts([]));
     }
   };
 
@@ -84,7 +81,7 @@ const Contacts = () => {
   };
 
   useEffect(() => {
-    setContacts([]);
+    dispatch(setContacts([]));
     const unsubscribe = handleContacts();
     return () => unsubscribe();
   }, [currentPage]);

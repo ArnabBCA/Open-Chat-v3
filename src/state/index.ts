@@ -13,6 +13,12 @@ interface User {
   uid: string;
 }
 
+interface ContactProps {
+  uid: string;
+  displayName: string;
+  photoURL: string;
+}
+
 interface AuthState {
   theme: 'light' | 'dark';
   isSidebarOpen: boolean;
@@ -20,7 +26,8 @@ interface AuthState {
   currentUser: User | null;
   currentPage: string;
   currentChatId: string | null;
-  messages: [];
+  messages: any[];
+  contacts: ContactProps[];
 }
 
 const initialState: AuthState = {
@@ -31,6 +38,7 @@ const initialState: AuthState = {
   currentPage: getPageSearchParam(),
   currentChatId: getChatIdSearchParam(),
   messages: [],
+  contacts: [],
 };
 
 const authSlice = createSlice({
@@ -57,8 +65,24 @@ const authSlice = createSlice({
     setCurrentChatId: (state, action: PayloadAction<string | null>) => {
       state.currentChatId = action.payload;
     },
-    setMessages: (state, action: PayloadAction<[]>) => {
-      state.messages = action.payload;
+    setMessages: (state, action: PayloadAction<any[]>) => {
+      const messages = action.payload;
+      const messageMap = new Map<string, any>();
+      // Add existing messages to the map
+      state.messages.forEach((message) => {
+        messageMap.set(message.messageId, message);
+      });
+      // Add new messages to the map, replacing old ones with the same ID
+      messages.forEach((message) => {
+        messageMap.set(message.messageId, message);
+      });
+      // Convert the map values to an array and sort by timestamp
+      state.messages = Array.from(messageMap.values()).sort(
+        (a, b) => b.timestamp - a.timestamp
+      );
+    },
+    setContacts: (state, action: PayloadAction<ContactProps[]>) => {
+      state.contacts = action.payload;
     },
   },
 });
@@ -71,5 +95,6 @@ export const {
   setCurrentPage,
   setMessages,
   setCurrentChatId,
+  setContacts,
 } = authSlice.actions;
 export default authSlice.reducer;

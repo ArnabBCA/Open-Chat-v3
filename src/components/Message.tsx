@@ -4,10 +4,12 @@ interface MessageProps {
   message: {
     text: string;
     sender: string;
+    displayName: string;
   };
 }
 
 const Message = (props: MessageProps) => {
+  //console.log(props.message);
   const currentUser = useSelector((state) => state.currentUser);
 
   // Determine alignment based on senderId
@@ -17,7 +19,7 @@ const Message = (props: MessageProps) => {
     <div className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}>
       <div className={`max-w-[calc(70%)]`}>
         <p
-          className={`max-w-max px-4 py-2 rounded-3xl ${
+          className={`max-w-max rounded-3xl px-4 py-2 ${
             isCurrentUser ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'
           }`}
         >

@@ -1,4 +1,4 @@
-import { ContactProps } from './Contacts';
+import { ContactProp } from './Contacts';
 import {
   arrayRemove,
   arrayUnion,

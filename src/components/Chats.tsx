@@ -9,7 +9,7 @@ import {
   query,
   startAfter,
 } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { setCurrentChatId, setMessages } from '../state';
 import { useSelector } from '../hooks/useSelector';
@@ -23,8 +23,27 @@ const Chats = () => {
   const contacts = useSelector((state) => state.contacts);
   const messages = useSelector((state) => state.messages);
   const [lastDoc, setLastDoc] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
+  const observer = useRef<IntersectionObserver | undefined>(undefined);
+
+  const lastMessageRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          console.log('Visible');
+          getOldMessages();
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
+  );
 
   const getOldMessages = async () => {
+    setLoading(true);
     if (!currentChatId) return;
 
     const docRef = doc(db, 'chats', currentChatId);
@@ -33,7 +52,7 @@ const Chats = () => {
       collectionRef,
       orderBy('timestamp', 'desc'),
       ...(lastDoc ? [startAfter(lastDoc)] : []),
-      limit(3)
+      limit(30)
     );
 
     try {
@@ -43,10 +62,13 @@ const Chats = () => {
       );
       if (newMessages.length > 0) {
         setLastDoc(newMessages[newMessages.length - 1].timestamp);
+        setHasMore(newMessages.length === 30);
         dispatch(setMessages(newMessages));
       }
     } catch (error) {
       console.error('Error fetching old messages: ', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -111,10 +133,33 @@ const Chats = () => {
 
   return (
     <div className="flex h-[calc(100%-8rem)] flex-col-reverse gap-2 overflow-y-scroll p-2">
-      {messages.map((message: any) => (
-        <Message key={message.messageId} message={message} />
-      ))}
-      <button onClick={getOldMessages}>Load more</button>
+      {messages.map((message: any, index) => {
+        if (index === messages.length - 1) {
+          return (
+            <div ref={lastMessageRef} key={message.messageId}>
+              <Message message={message} />
+            </div>
+          );
+        } else {
+          return (
+            <div key={message.messageId}>
+              <Message message={message} />
+            </div>
+          );
+        }
+      })}
+      {loading && (
+        <span className="absolute left-1/2 top-20 -translate-x-1/2 -translate-y-1/2 transform rounded-lg bg-input px-1.5 py-0.5 text-sm text-inputText">
+          Loading...
+        </span>
+      )}
+      {!hasMore && (
+        <div className="flex w-full items-center justify-center">
+          <span className="rounded-lg bg-input px-1.5 py-0.5 text-center text-sm text-neutral-500">
+            No more messages to show
+          </span>
+        </div>
+      )}
     </div>
   );
 };

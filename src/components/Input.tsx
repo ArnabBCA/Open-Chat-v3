@@ -1,5 +1,5 @@
 import { getDatabase, ref, update } from 'firebase/database';
-import { IoIosSend, IoIosAddCircle } from 'react-icons/io';
+import { IoIosSend } from 'react-icons/io';
 import { useSelector } from '../hooks/useSelector';
 import { useState } from 'react';
 import { collection, doc, serverTimestamp, setDoc } from 'firebase/firestore';
@@ -12,8 +12,9 @@ const Input = () => {
   const [input, setInput] = useState('');
   if (!currentUser) return;
 
-  const handleSubmit = async () => {
-    if (!input || !currentChatId) return;
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!input.trim() || !currentChatId) return;
     const currentChatDocRef = doc(db, 'chats', currentChatId);
     const messagesCollectionRef = collection(currentChatDocRef, 'messages');
     const messageId = v4();
@@ -43,24 +44,27 @@ const Input = () => {
   };
 
   return (
-    <div className="flex h-full gap-1 rounded-lg bg-input p-2 shadow-xl duration-300">
-      <button>
+    <div className="flex h-full gap-1 rounded-lg shadow-xl duration-300">
+      {/*<button>
         <IoIosAddCircle className="text-3xl text-neutral-500" />
-      </button>
-      <input
-        onFocus={handleTyping}
-        onBlur={handleNotTyping}
-        onChange={(e) => setInput(e.target.value.trim())}
-        className="h-full w-full bg-transparent text-inputText outline-none"
-        type="text"
-        placeholder="Type message..."
-      />
-      <button>
-        <IoIosSend
-          className="text-3xl text-neutral-500"
-          onClick={handleSubmit}
+      </button>*/}
+      <form onSubmit={handleSubmit} className="flex h-full w-full gap-2">
+        <input
+          onFocus={handleTyping}
+          onBlur={handleNotTyping}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className="h-full w-full rounded-lg bg-input px-4 py-2 text-inputText outline-none"
+          type="text"
+          placeholder="Type message..."
         />
-      </button>
+        <button
+          type="submit"
+          className="flex min-h-12 min-w-12 items-center justify-center rounded-lg bg-sidebarButtonAccent"
+        >
+          <IoIosSend className="text-3xl text-white" />
+        </button>
+      </form>
     </div>
   );
 };

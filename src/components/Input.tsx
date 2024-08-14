@@ -44,28 +44,23 @@ const Input = () => {
   };
 
   return (
-    <div className="flex h-full gap-1 rounded-lg shadow-xl duration-300">
-      {/*<button>
-        <IoIosAddCircle className="text-3xl text-neutral-500" />
-      </button>*/}
-      <form onSubmit={handleSubmit} className="flex h-full w-full gap-2">
-        <input
-          onFocus={handleTyping}
-          onBlur={handleNotTyping}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="h-full w-full rounded-lg bg-input px-4 py-2 text-inputText outline-none"
-          type="text"
-          placeholder="Type message..."
-        />
-        <button
-          type="submit"
-          className="flex min-h-12 min-w-12 items-center justify-center rounded-lg bg-sidebarButtonAccent"
-        >
-          <IoIosSend className="text-3xl text-white" />
-        </button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit} className="flex h-full w-full gap-2">
+      <input
+        onFocus={handleTyping}
+        onBlur={handleNotTyping}
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        className="h-full w-full rounded-lg bg-input px-4 py-2 text-inputText shadow-xl outline-none duration-300"
+        type="text"
+        placeholder="Type message..."
+      />
+      <button
+        type="submit"
+        className="flex min-h-12 min-w-12 items-center justify-center rounded-lg bg-sidebarButtonAccent shadow-xl"
+      >
+        <IoIosSend className="text-3xl text-white" />
+      </button>
+    </form>
   );
 };
 

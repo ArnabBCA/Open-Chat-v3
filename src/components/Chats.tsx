@@ -11,7 +11,7 @@ import {
 } from 'firebase/firestore';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { setCurrentChatId, setMessages } from '../state';
+import { resetMessages, setCurrentChatId, setMessages } from '../state';
 import { useSelector } from '../hooks/useSelector';
 import { db } from '../firebase';
 import Message from './Message';
@@ -26,6 +26,7 @@ const Chats = () => {
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef<IntersectionObserver | undefined>(undefined);
+  const [docLimit, _] = useState(Math.ceil(window.innerHeight / 40));
 
   const lastMessageRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -33,7 +34,6 @@ const Chats = () => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          console.log('Visible');
           getOldMessages();
         }
       });
@@ -42,17 +42,16 @@ const Chats = () => {
     [loading, hasMore]
   );
 
-  const getOldMessages = async () => {
+  const getOldMessages = async (isReset?: boolean) => {
     setLoading(true);
     if (!currentChatId) return;
-
     const docRef = doc(db, 'chats', currentChatId);
     const collectionRef = collection(docRef, 'messages');
     const q = query(
       collectionRef,
       orderBy('timestamp', 'desc'),
-      ...(lastDoc ? [startAfter(lastDoc)] : []),
-      limit(30)
+      ...(lastDoc && !isReset ? [startAfter(lastDoc)] : []),
+      limit(docLimit)
     );
 
     try {
@@ -60,9 +59,9 @@ const Chats = () => {
       const newMessages = querySnapshot.docs.map((doc) =>
         handleMessage(doc.data())
       );
+      setHasMore(newMessages.length === docLimit);
       if (newMessages.length > 0) {
         setLastDoc(newMessages[newMessages.length - 1].timestamp);
-        setHasMore(newMessages.length === 30);
         dispatch(setMessages(newMessages));
       }
     } catch (error) {
@@ -72,7 +71,6 @@ const Chats = () => {
     }
   };
 
-  let c = 0;
   const getNewMessages = () => {
     if (!currentChatId) return;
     const docRef = doc(db, 'chats', currentChatId);
@@ -80,8 +78,6 @@ const Chats = () => {
     const q = query(collectionRef, orderBy('timestamp', 'desc'), limit(1));
 
     const unsub = onSnapshot(q, (querySnapshot) => {
-      c++;
-      if (c === 1) return;
       const newMessages = querySnapshot.docs.map((doc) =>
         handleMessage(doc.data())
       );
@@ -111,6 +107,7 @@ const Chats = () => {
       ...additionalDetails,
     };
   };
+
   const isChatIdExists = async () => {
     if (!currentChatId) return;
     try {
@@ -125,10 +122,12 @@ const Chats = () => {
   };
 
   useEffect(() => {
+    dispatch(resetMessages());
     isChatIdExists();
-    getOldMessages();
+    setLastDoc(null);
+    getOldMessages(true);
     const unsub = getNewMessages();
-    return unsub;
+    return () => unsub?.();
   }, [currentChatId]);
 
   return (
@@ -151,6 +150,11 @@ const Chats = () => {
       {loading && (
         <span className="absolute left-1/2 top-20 -translate-x-1/2 -translate-y-1/2 transform rounded-lg bg-input px-1.5 py-0.5 text-sm text-inputText">
           Loading...
+        </span>
+      )}
+      {docLimit && (
+        <span className="absolute left-0 top-20 transform rounded-lg bg-input px-1.5 py-0.5 text-sm text-inputText">
+          {docLimit}
         </span>
       )}
       {!hasMore && (

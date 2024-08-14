@@ -81,6 +81,9 @@ const authSlice = createSlice({
         (a, b) => b.timestamp - a.timestamp
       );
     },
+    resetMessages: (state) => {
+      state.messages = [];
+    },
     setContacts: (state, action: PayloadAction<ContactProps[]>) => {
       state.contacts = action.payload;
     },
@@ -96,5 +99,6 @@ export const {
   setMessages,
   setCurrentChatId,
   setContacts,
+  resetMessages,
 } = authSlice.actions;
 export default authSlice.reducer;

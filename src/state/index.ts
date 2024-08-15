@@ -84,6 +84,15 @@ const authSlice = createSlice({
     resetMessages: (state) => {
       state.messages = [];
     },
+    updateMessage: (state, action: PayloadAction<any>) => {
+      const updatedMessage = action.payload;
+      const messageIndex = state.messages.findIndex(
+        (message) => message.messageId === updatedMessage.messageId
+      );
+      if (messageIndex !== -1) {
+        state.messages[messageIndex] = updatedMessage;
+      }
+    },
     setContacts: (state, action: PayloadAction<ContactProps[]>) => {
       state.contacts = action.payload;
     },
@@ -100,5 +109,6 @@ export const {
   setCurrentChatId,
   setContacts,
   resetMessages,
+  updateMessage,
 } = authSlice.actions;
 export default authSlice.reducer;

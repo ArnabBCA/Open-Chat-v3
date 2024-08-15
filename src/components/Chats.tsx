@@ -45,8 +45,7 @@ const Chats = () => {
   const getOldMessages = async (isReset?: boolean) => {
     setLoading(true);
     if (!currentChatId) return;
-    const docRef = doc(db, 'chats', currentChatId);
-    const collectionRef = collection(docRef, 'messages');
+    const collectionRef = collection(db, 'chats', currentChatId, 'messages');
     const q = query(
       collectionRef,
       orderBy('timestamp', 'desc'),
@@ -73,10 +72,8 @@ const Chats = () => {
 
   const getNewMessages = () => {
     if (!currentChatId) return;
-    const docRef = doc(db, 'chats', currentChatId);
-    const collectionRef = collection(docRef, 'messages');
+    const collectionRef = collection(db, 'chats', currentChatId, 'messages');
     const q = query(collectionRef, orderBy('timestamp', 'desc'), limit(1));
-
     const unsub = onSnapshot(q, (querySnapshot) => {
       const newMessages = querySnapshot.docs.map((doc) =>
         handleMessage(doc.data())

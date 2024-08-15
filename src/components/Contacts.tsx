@@ -97,7 +97,7 @@ const Contacts = () => {
         />
         <IoIosSearch className="text-3xl text-neutral-500" />
       </div>
-      <div className="flex h-full w-full flex-col overflow-x-scroll">
+      <div className="flex h-full w-full flex-col overflow-y-scroll">
         {contacts.map((contact) => (
           <Contact key={contact.uid} contact={contact} />
         ))}

@@ -1,7 +1,7 @@
 import { doc, onSnapshot } from 'firebase/firestore';
 import { useSelector } from '../hooks/useSelector';
 import { db } from '../firebase';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateMessage } from '../state';
 import moment from 'moment';
@@ -13,6 +13,7 @@ interface MessageProps {
     sender: string;
     displayName: string;
     timestamp: number;
+    showTimestamp: boolean;
   };
 }
 
@@ -21,6 +22,7 @@ const Message = (props: MessageProps) => {
   const currentUser = useSelector((state) => state.currentUser);
   const currentChatId = useSelector((state) => state.currentChatId);
   const isCurrentUser = props.message.sender === currentUser?.uid;
+  const [showTimestamp, setShowTimestamp] = useState(false);
   if (!currentUser || !currentChatId) return null;
 
   const updateMessages = () => {
@@ -38,13 +40,17 @@ const Message = (props: MessageProps) => {
     return unsub;
   };
 
-  function getTimeStringFromTimestamp(timestamp: any) {
+  const getTimestamp = (timestamp: any, isTypeDate?: boolean) => {
     // Convert to milliseconds by multiplying seconds by 1000
     const milliseconds =
       timestamp.seconds * 1000 + Math.floor(timestamp.nanoseconds / 1000000);
     const time = moment(milliseconds);
-    return time.format('hh:mm:ss A');
-  }
+    if (isTypeDate) {
+      return time.format('MMMM Do, YYYY');
+    } else {
+      return time.format('hh:mm:ss A');
+    }
+  };
 
   /*const handleClick = async () => {
     const docRef = doc(
@@ -61,26 +67,39 @@ const Message = (props: MessageProps) => {
 
   useEffect(() => {
     const unsub = updateMessages();
+    console.log('showTimestamp', props.message.showTimestamp);
+    setShowTimestamp(props.message.showTimestamp);
     return () => unsub?.();
   }, [props.message.messageId]);
 
   return (
-    <div className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}>
-      <div className={`flex max-w-[calc(70%)] flex-col`}>
-        <span className="self-end text-[12px] text-inputText">
-          {getTimeStringFromTimestamp(props.message.timestamp)}
-        </span>
-        <p
-          className={`max-w-max rounded-3xl px-4 py-2 ${
-            isCurrentUser
-              ? 'self-end bg-blue-500 text-white'
-              : 'self-start bg-gray-300 text-black'
-          }`}
-        >
-          {props.message.text}
-        </p>
+    <>
+      {showTimestamp && (
+        <div className="flex w-full items-center justify-center">
+          <span className="rounded-lg bg-input px-1.5 py-0.5 text-center text-sm text-neutral-500">
+            {getTimestamp(props.message.timestamp, true)}
+          </span>
+        </div>
+      )}
+      <div
+        className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}
+      >
+        <div className={`flex max-w-[calc(70%)] flex-col`}>
+          <span className="self-end text-[12px] text-inputText">
+            {getTimestamp(props.message.timestamp)}
+          </span>
+          <p
+            className={`max-w-max rounded-3xl px-4 py-2 ${
+              isCurrentUser
+                ? 'self-end bg-blue-500 text-white'
+                : 'self-start bg-gray-300 text-black'
+            }`}
+          >
+            {props.message.text}
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

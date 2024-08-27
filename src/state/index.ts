@@ -77,9 +77,25 @@ const authSlice = createSlice({
         messageMap.set(message.messageId, message);
       });
       // Convert the map values to an array and sort by timestamp
-      state.messages = Array.from(messageMap.values()).sort(
+      const sortedMessages = Array.from(messageMap.values()).sort(
         (a, b) => b.timestamp - a.timestamp
       );
+      // Set the showTimestamp property
+      let previousDate = null;
+      for (let i = sortedMessages.length - 1; i >= 0; i--) {
+        const message = sortedMessages[i];
+        const messageDate = new Date(
+          message.timestamp.seconds * 1000
+        ).toDateString();
+
+        if (previousDate !== messageDate) {
+          message.showTimestamp = true;
+          previousDate = messageDate;
+        } else {
+          message.showTimestamp = false;
+        }
+      }
+      state.messages = sortedMessages;
     },
     resetMessages: (state) => {
       state.messages = [];

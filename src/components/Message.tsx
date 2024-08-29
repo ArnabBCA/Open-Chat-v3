@@ -3,7 +3,7 @@ import { useSelector } from '../hooks/useSelector';
 import { db } from '../firebase';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateMessage } from '../state';
+import { updateMessage, setEditMessage } from '../state';
 import moment from 'moment';
 import { MdDelete } from 'react-icons/md';
 import { MdEdit } from 'react-icons/md';
@@ -68,12 +68,16 @@ const Message = (props: MessageProps) => {
   };
 
   const handleEditMessage = () => {
-    console.log('Edit message');
+    dispatch(
+      setEditMessage({
+        id: props.message.messageId,
+        text: props.message.text,
+      })
+    );
   };
 
   useEffect(() => {
     const unsub = updateMessages();
-    console.log('showTimestamp', props.message.showTimestamp);
     setShowTimestamp(props.message.showTimestamp);
     return () => unsub?.();
   }, [props.message.messageId]);
@@ -102,16 +106,16 @@ const Message = (props: MessageProps) => {
             }`}
           >
             {isCurrentUser && (
-              <div className="hidden overflow-hidden rounded-lg bg-input group-hover:block">
+              <div className="hidden overflow-hidden rounded-lg group-hover:block shadow-md">
                 <div className="flex shadow-lg">
                   <button
-                    className="flex items-center p-2 text-inputText hover:bg-button"
+                    className="flex items-center bg-input p-2 text-inputText hover:bg-input/50"
                     onClick={handleEditMessage}
                   >
                     <MdEdit size={20} />
                   </button>
                   <button
-                    className="flex items-center p-2 text-red-500 hover:bg-button"
+                    className="flex items-center bg-input p-2 text-red-500 hover:bg-input/50"
                     onClick={handleDeleteMessage}
                   >
                     <MdDelete size={20} />

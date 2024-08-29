@@ -11,7 +11,12 @@ import {
 } from 'firebase/firestore';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { resetMessages, setCurrentChatId, setMessages } from '../state';
+import {
+  resetMessages,
+  setCurrentChatId,
+  setEditMessage,
+  setMessages,
+} from '../state';
 import { useSelector } from '../hooks/useSelector';
 import { db } from '../firebase';
 import Message from './Message';
@@ -22,6 +27,7 @@ const Chats = () => {
   const currentUser = useSelector((state) => state.currentUser);
   const contacts = useSelector((state) => state.contacts);
   const messages = useSelector((state) => state.messages);
+  const editMessage = useSelector((state) => state.editMessage);
   const [lastDoc, setLastDoc] = useState(null);
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
@@ -120,6 +126,7 @@ const Chats = () => {
 
   useEffect(() => {
     dispatch(resetMessages());
+    dispatch(setEditMessage({ id: '', text: '' }));
     isChatIdExists();
     setLastDoc(null);
     getOldMessages(true);
@@ -128,7 +135,9 @@ const Chats = () => {
   }, [currentChatId]);
 
   return (
-    <div className="flex h-[calc(100%-8rem)] flex-col-reverse gap-2 overflow-y-scroll p-2">
+    <div
+      className={`flex ${editMessage.text ? 'h-[calc(100%-10.5rem)]' : 'h-[calc(100%-8rem)]'} flex-col-reverse gap-2 overflow-y-scroll p-2`}
+    >
       {messages.map((message: any, index) => {
         if (index === messages.length - 1) {
           return (

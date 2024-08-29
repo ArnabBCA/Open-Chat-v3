@@ -28,6 +28,10 @@ interface AuthState {
   currentChatId: string | null;
   messages: any[];
   contacts: ContactProps[];
+  editMessage: {
+    id: string;
+    text: string;
+  };
 }
 
 const initialState: AuthState = {
@@ -39,6 +43,10 @@ const initialState: AuthState = {
   currentChatId: getChatIdSearchParam(),
   messages: [],
   contacts: [],
+  editMessage: {
+    id: '',
+    text: '',
+  },
 };
 
 const authSlice = createSlice({
@@ -109,6 +117,12 @@ const authSlice = createSlice({
         state.messages[messageIndex] = updatedMessage;
       }
     },
+    setEditMessage: (
+      state,
+      action: PayloadAction<{ id: string; text: string }>
+    ) => {
+      state.editMessage = action.payload;
+    },
     setContacts: (state, action: PayloadAction<ContactProps[]>) => {
       state.contacts = action.payload;
     },
@@ -126,5 +140,6 @@ export const {
   setContacts,
   resetMessages,
   updateMessage,
+  setEditMessage,
 } = authSlice.actions;
 export default authSlice.reducer;

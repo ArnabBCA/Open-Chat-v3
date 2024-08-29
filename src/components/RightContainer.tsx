@@ -50,9 +50,7 @@ const RightContainer = () => {
         </CheckOutsideClick>
       </div>
       <Chats />
-      <div className="h-16 p-2">
-        <Input />
-      </div>
+      <Input />
     </div>
   );
 };

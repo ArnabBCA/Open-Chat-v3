@@ -1,4 +1,3 @@
-import { ContactProp } from './Contacts';
 import {
   arrayRemove,
   arrayUnion,
@@ -15,12 +14,13 @@ import { useSelector } from '../hooks/useSelector';
 import { MdDone } from 'react-icons/md';
 import { RxCross2 } from 'react-icons/rx';
 import { useDispatch } from 'react-redux';
-import { setCurrentChatId, toggleIsMobile } from '../state';
+import { setCurrentChatId, toggleIsMobile, ContactProps } from '../state';
 
 const Contact = ({ contact }: { contact: ContactProps }) => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.currentUser);
   const currentPage = useSelector((state) => state.currentPage);
+  const currentChatId = useSelector((state) => state.currentChatId);
   if (!currentUser) return;
 
   const currentUserDocRef = doc(db, 'users', currentUser.uid);
@@ -104,6 +104,12 @@ const Contact = ({ contact }: { contact: ContactProps }) => {
     return () => unsubscribe();
   }, []);
 
+  const isConatctBelongToChatId = () => {
+    if (!currentChatId) return false;
+    const chatId = currentChatId.split('_');
+    return chatId.includes(contact.uid);
+  };
+
   const rdb = getDatabase();
   const isTypingRef = ref(rdb, `users/${contact.uid}/isTyping`);
 
@@ -118,7 +124,7 @@ const Contact = ({ contact }: { contact: ContactProps }) => {
 
   return (
     <div
-      className="flex max-h-16 w-full cursor-pointer items-center justify-between gap-2 rounded-lg p-2 duration-300 hover:bg-button hover:shadow-xl"
+      className={`flex max-h-16 w-full cursor-pointer items-center justify-between gap-2 rounded-lg p-2 duration-300 hover:bg-button hover:shadow-xl ${currentPage === 'chats' && isConatctBelongToChatId() ? 'bg-button' : ''}`}
       onClick={handleChatClick}
     >
       <div className="flex h-full items-center gap-2">

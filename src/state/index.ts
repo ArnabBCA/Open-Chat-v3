@@ -13,7 +13,7 @@ interface User {
   uid: string;
 }
 
-interface ContactProps {
+export interface ContactProps {
   uid: string;
   displayName: string;
   photoURL: string;

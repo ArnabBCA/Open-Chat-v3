@@ -1,10 +1,12 @@
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { useSelector } from '../hooks/useSelector';
 import { db } from '../firebase';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateMessage } from '../state';
 import moment from 'moment';
+import { MdDelete } from 'react-icons/md';
+import { MdEdit } from 'react-icons/md';
 
 interface MessageProps {
   message: {
@@ -52,7 +54,7 @@ const Message = (props: MessageProps) => {
     }
   };
 
-  /*const handleClick = async () => {
+  const handleDeleteMessage = async () => {
     const docRef = doc(
       db,
       'chats',
@@ -61,9 +63,13 @@ const Message = (props: MessageProps) => {
       props.message.messageId
     );
     await updateDoc(docRef, {
-      text: '[This message has been deleted]',
+      text: 'This message has been deleted',
     });
-  };*/
+  };
+
+  const handleEditMessage = () => {
+    console.log('Edit message');
+  };
 
   useEffect(() => {
     const unsub = updateMessages();
@@ -82,21 +88,51 @@ const Message = (props: MessageProps) => {
         </div>
       )}
       <div
-        className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}
+        className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'} group`}
       >
         <div className={`flex max-w-[calc(70%)] flex-col`}>
-          <span className="self-end text-[12px] text-inputText">
+          <span
+            className={`text-[12px] text-inputText ${isCurrentUser ? 'self-end' : 'self-start'}`}
+          >
             {getTimestamp(props.message.timestamp)}
           </span>
-          <p
-            className={`max-w-max rounded-3xl px-4 py-2 ${
-              isCurrentUser
-                ? 'self-end bg-blue-500 text-white'
-                : 'self-start bg-gray-300 text-black'
+          <div
+            className={`flex items-center gap-4 ${
+              isCurrentUser ? 'self-end' : 'flex-row-reverse self-start'
             }`}
           >
-            {props.message.text}
-          </p>
+            {isCurrentUser && (
+              <div className="hidden overflow-hidden rounded-lg bg-input group-hover:block">
+                <div className="flex shadow-lg">
+                  <button
+                    className="flex items-center p-2 text-inputText hover:bg-button"
+                    onClick={handleEditMessage}
+                  >
+                    <MdEdit size={20} />
+                  </button>
+                  <button
+                    className="flex items-center p-2 text-red-500 hover:bg-button"
+                    onClick={handleDeleteMessage}
+                  >
+                    <MdDelete size={20} />
+                  </button>
+                </div>
+              </div>
+            )}
+            <p
+              className={`max-w-max rounded-3xl px-4 py-2 ${
+                isCurrentUser
+                  ? 'self-end bg-blue-500 text-white'
+                  : 'self-start bg-gray-300 text-black'
+              }`}
+            >
+              {props.message.text === 'This message has been deleted' ? (
+                <i>{props.message.text}</i>
+              ) : (
+                props.message.text
+              )}
+            </p>
+          </div>
         </div>
       </div>
     </>
